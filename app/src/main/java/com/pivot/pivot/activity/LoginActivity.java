@@ -1,22 +1,21 @@
 package com.pivot.pivot.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.gun0912.tedpermission.PermissionListener;
+import com.pivot.pivot.ApiGenerator;
 import com.pivot.pivot.R;
-import com.pivot.pivot.bluetooth.BluetoothManager;
-import com.pivot.pivot.bluetooth.BluetoothReceiver;
-
-import java.util.ArrayList;
+import com.pivot.pivot.model.LoginData;
+import com.pivot.pivot.model.UserLoginResponse;
 
 import simplifii.framework.activity.BaseActivity;
+import simplifii.framework.asyncmanager.HttpParamObject;
+import simplifii.framework.utility.AppConstants;
+import simplifii.framework.utility.Preferences;
 import simplifii.framework.utility.Util;
 
 public class LoginActivity extends BaseActivity {
@@ -35,7 +34,6 @@ public class LoginActivity extends BaseActivity {
 
         btnLogin.setOnClickListener(this);
     }
-
 
 
     @Override
@@ -67,7 +65,35 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        startNextActivity(HomeActivity.class);
-        finish();
+
+        HttpParamObject httpParamObject = ApiGenerator.userLogin(email, password);
+        executeTask(AppConstants.TASK_CODES.LOGIN, httpParamObject);
+//        Preferences.saveData(Preferences.LOGIN_KEY,true);
+//        startNextActivity(HomeActivity.class);
+//        finish();
+    }
+
+    @Override
+    public void onPostExecute(Object response, int taskCode, Object... params) {
+        super.onPostExecute(response, taskCode, params);
+        switch (taskCode) {
+            case AppConstants.TASK_CODES.LOGIN:
+                UserLoginResponse userLoginResponse = (UserLoginResponse) response;
+                if (userLoginResponse != null) {
+                    LoginData data = userLoginResponse.getData();
+                    if (data != null) {
+
+                        String token = data.getToken();
+                        if (!TextUtils.isEmpty(token))
+                            Preferences.saveData(Preferences.KEY_TOKEN, token);
+
+                    }
+                    Preferences.saveData(Preferences.LOGIN_KEY,true);
+                    startNextActivity(HomeActivity.class);
+                    finish();
+
+                }
+                break;
+        }
     }
 }

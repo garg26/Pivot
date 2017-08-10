@@ -33,6 +33,8 @@ public class Preferences {
     public static final String KEY_PREFERENCES = "prefernces";
     public static final String KEY_COMMON_DATA = "commonData";
     public static final String KEY_IDENTITY_DOCS = "keyIdentityDocs";
+    public static final String BLUETOOTH_DEVICE = "myBluetoothDevice";
+    public static final String KEY_TOKEN = "token";
 
     private static SharedPreferences xebiaSharedPrefs;
     private static SharedPreferences.Editor editor;

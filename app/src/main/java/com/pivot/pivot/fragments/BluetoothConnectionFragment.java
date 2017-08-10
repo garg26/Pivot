@@ -1,15 +1,10 @@
 package com.pivot.pivot.fragments;
 
-import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.ParcelUuid;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +19,6 @@ import android.widget.TextView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.pivot.pivot.R;
 import com.pivot.pivot.activity.HomeActivity;
-import com.pivot.pivot.activity.ReadActivity;
 import com.pivot.pivot.bluetooth.BluetoothManager;
 import com.pivot.pivot.bluetooth.BluetoothReceiver;
 import com.pivot.pivot.model.BluetoothConnectionModel;
@@ -64,9 +58,9 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
         return bluetoothConnectionFragment;
     }
 
-    private void enableBluetoothReader() {
+    private void enableBluetoothReader(Context context) {
 
-        BluetoothManager.askPermissions(getActivity(), new PermissionListener() {
+        BluetoothManager.askPermissions(context, new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 onPermissionReceived();
@@ -77,67 +71,18 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
 
             }
         });
-//        if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.BLUETOOTH)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-//                    Manifest.permission.BLUETOOTH)) {
-//
-//                ActivityCompat.requestPermissions(getActivity(),
-//                        new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
-//                        REQUEST_ENABLE_BT);
-//
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//
-//            } else {
-//
-//                // No explanation needed, we can request the permission.
-//
-//                ActivityCompat.requestPermissions(getActivity(),
-//                        new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
-//                        REQUEST_ENABLE_BT);
-//
-//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//            }
-//        }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 0: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                   onPermissionReceived();
-
-                } else {
-
-                    showToast("Permission Denied");
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
 
 
     private void onPermissionReceived() {
         // progressBar.setVisibility(View.VISIBLE);
+        showProgressBar();
         BluetoothManager manager = BluetoothManager.getInstance(getActivity());
         manager.onBluetooth();
         pairedDevices = manager.getPairedDevices();
         if (CollectionUtils.isNotEmpty(pairedDevices)) {
             //    progressBar.setVisibility(View.GONE);
+            hideProgressBar();
         }
         for (BluetoothDevice device : pairedDevices) {
             BluetoothConnectionModel connectionModel = new BluetoothConnectionModel();
@@ -147,7 +92,10 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
         }
         setFirstObject();
         //listAdapter.notifyDataSetChanged();
-        manager.startSearching(getActivity(), new BluetoothReceiver(this));
+        if (receiver == null) {
+            receiver = new BluetoothReceiver(this);
+        }
+        manager.startSearching(getActivity(), receiver);
     }
 
     @Override
@@ -157,25 +105,18 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
         Button btnOk = (Button) findView(R.id.btn_ok);
         tvEmptyView = (TextView) findView(R.id.tv_empty_view);
         progressBar = (ProgressBar) findView(R.id.progress_bar);
-        enableBluetoothReader();
+        enableBluetoothReader(getContext());
         ListView listBluetoothConnection = (ListView) findView(R.id.list_bluetooth_connection);
         listAdapter = new CustomListAdapter(getActivity(), R.layout.row_bluetooth_connection, connectionModelList, this);
         listBluetoothConnection.setAdapter(listAdapter);
         listAdapter.notifyDataSetChanged();
         setOnClickListener(R.id.btn_cancel, R.id.btn_ok);
+
         listBluetoothConnection.setEmptyView(tvEmptyView);
         IntentFilter intent = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         getActivity().registerReceiver(mPairReceiver, intent);
     }
 
-
-    @Override
-    public void onDestroy() {
-        if (receiver != null) {
-            getActivity().unregisterReceiver(receiver);
-        }
-        super.onDestroy();
-    }
 
     @Override
     public int getViewID() {
@@ -192,9 +133,19 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
         } else {
             holder = (Holder) convertView.getTag();
         }
+
         final BluetoothConnectionModel bluetoothConnectionModel = connectionModelList.get(position);
 
+
         final BluetoothDevice bluetoothDevice = bluetoothConnectionModel.getBluetoothDevice();
+        String myDeviceAddress = Preferences.getData(AppConstants.PREF_KEYS.BLUETOOTH_DEVICE, null);
+        if (!CollectionUtils.isEmpty(myDeviceAddress)) {
+            if (bluetoothDevice.getAddress().equals(myDeviceAddress)) {
+                bluetoothConnectionModel.setSelected(true);
+                deviceSelected = true;
+                holder.radioButton.setChecked(true);
+            }
+        }
 
 
         if (bluetoothConnectionModel.isIfPaired() == false) {
@@ -230,14 +181,14 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!bluetoothConnectionModel.isIfPaired()){
+                if (!bluetoothConnectionModel.isIfPaired()) {
                     return;
                 }
                 for (BluetoothConnectionModel model : connectionModelList) {
                     model.setSelected(false);
                 }
                 if (bluetoothDevice != null) {
-                    Preferences.saveData(AppConstants.PREF_KEYS.BLUETOOTH_DEVICE,bluetoothDevice.toString());
+                    Preferences.saveData(AppConstants.PREF_KEYS.BLUETOOTH_DEVICE, bluetoothDevice.getAddress());
                 }
                 bluetoothConnectionModel.setSelected(true);
                 listAdapter.notifyDataSetChanged();
@@ -283,7 +234,7 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
     @Override
     public void sendData(BluetoothDevice deviceList) {
         if (deviceList != null)
-            progressBar.setVisibility(View.GONE);
+            hideProgressBar();
         boolean ifAlreadyPresent = false;
         for (BluetoothConnectionModel connectios : connectionModelList) {
             if (connectios.getBluetoothDevice().getAddress().equalsIgnoreCase(deviceList.getAddress())) {
@@ -303,6 +254,7 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
     @Override
     public void noDevice(Boolean aBoolean) {
         if (aBoolean == true) {
+            hideProgressBar();
             //progressBar.setVisibility(View.GONE);
             tvEmptyView.setText("No Device Found");
         } else {
@@ -347,32 +299,13 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
                 final int prevState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
                 BluetoothDevice deviceData = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
-//                    for (BluetoothConnectionModel connectionModel : connectionModelList) {
-//                        if (connectionModel.getBluetoothDevice().getAddress().equalsIgnoreCase(deviceData.getAddress())) {
-//                            connectionModel.setIfPaired(true);
-//                        }
-//                        setFirstObject();
-//                    }
                     connectionModelList.clear();
                     // onPermissionReceived();
-                    enableBluetoothReader();
+                    enableBluetoothReader(context);
                     // listAdapter.notifyDataSetChanged();
                     showToast("Paired");
                     boolean paired = true;
                 }
-                //else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED) {
-//                    for (BluetoothConnectionModel connectionModel : connectionModelList) {
-//                        if (connectionModel.getBluetoothDevice().getAddress().equalsIgnoreCase(deviceData.getAddress())) {
-//                            connectionModel.setIfPaired(false);
-//                        }
-//                    }
-//                    connectionModelList.clear();
-//                    //onPermissionReceived();
-//                    enableBluetoothReader();
-//                   // listAdapter.notifyDataSetChanged();
-//                    showToast("Unpaired");
-//                    paired = false;
-//                }
 
             }
         }
@@ -389,9 +322,9 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
             case R.id.btn_ok:
                 if (pairedDevices != null) {
                     if (deviceSelected) {
-                        //HomeFragment homeFragment = HomeFragment.getInstance();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.lay_fragment_container,new HomeFragment()).commit();
-                     //  getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+
+                        startNextActivity(HomeActivity.class);
+//                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.lay_fragment_container,new HomeFragment()).commit();
                     } else {
                         showToast("Please Select Device");
                     }
@@ -400,5 +333,12 @@ public class BluetoothConnectionFragment extends BaseFragment implements CustomL
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mPairReceiver);
+        getActivity().unregisterReceiver(receiver);
     }
 }

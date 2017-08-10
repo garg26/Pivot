@@ -17,20 +17,32 @@
             android:text="Set Id 1"
             android:textSize="@dimen/text_14dp" />
 
-        <simplifii.framework.widgets.CustomFontTextView
-            android:id="@+id/tv_set_name"
-            style="@style/tv_style"
-            android:layout_below="@+id/tv_set_id"
-            android:layout_marginLeft="@dimen/margin_24dp" />
+        <RelativeLayout
+            android:id="@+id/rl_set_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_set_id">
 
-        <ImageView
-            android:layout_width="@dimen/img_16dp"
-            android:layout_height="@dimen/img_16dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_set_id"
-            android:layout_marginRight="@dimen/margin_8dp"
-            android:src="@mipmap/return_icon"
-            android:visibility="gone" />
+            <simplifii.framework.widgets.CustomFontTextView
+                android:id="@+id/tv_set_name"
+                style="@style/tv_style"
+                android:layout_width="wrap_content"
+
+                android:layout_marginLeft="@dimen/margin_24dp"
+                android:text="qwtyuioasghjklzbnnm" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/iv_refresh_set"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/return_icon" />
+
+        </RelativeLayout>
+
 
         <simplifii.framework.widgets.CustomFontTextView
             android:id="@+id/tv_msg"

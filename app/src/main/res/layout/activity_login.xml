@@ -27,7 +27,7 @@
 
         <simplifii.framework.widgets.CustomFontEditText
             style="@style/et_login"
-            android:inputType="textPassword"
+
             android:id="@+id/et_pass"
             android:hint="@string/password"/>
 

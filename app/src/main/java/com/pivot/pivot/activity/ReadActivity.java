@@ -1,16 +1,16 @@
 package com.pivot.pivot.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.pivot.pivot.R;
-import com.pivot.pivot.fragments.FragmentInstrumentRead;
+import com.pivot.pivot.fragments.InstrumensReadFragment;
 import com.pivot.pivot.fragments.SetReadFragment;
-import com.pivot.pivot.model.TagListItem;
+import com.pivot.pivot.model.IdentifyTagsInstrument;
+import com.pivot.pivot.model.IdentifyTagsSets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +19,16 @@ import simplifii.framework.ListAdapters.CustomPagerAdapter;
 import simplifii.framework.activity.BaseActivity;
 import simplifii.framework.utility.AppConstants;
 
-/**
- * Created by mrnee on 6/2/2017.
- */
 
 public class ReadActivity extends BaseActivity implements CustomPagerAdapter.PagerAdapterInterface, ViewPager.OnPageChangeListener {
 
     private ViewPager viewPager;
-    private CustomPagerAdapter pagerAdapter;
-    private List<Fragment> fragmentList = new ArrayList<Fragment>();
+    private List<String> fragmentList = new ArrayList<>();
     private int currentItem;
-    private FloatingActionButton fab;
     private ImageView ivLeft, ivRight;
-    private ArrayList<TagListItem> tagListItems;
-    private int position;
+    private ArrayList<IdentifyTagsSets> setsList;
+    private ArrayList<String> tagList;
+    private ArrayList<IdentifyTagsInstrument> instrumentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,37 +37,77 @@ public class ReadActivity extends BaseActivity implements CustomPagerAdapter.Pag
 
         initToolBar("Scanned Tags");
         findViews();
-
-        tagListItems = (ArrayList<TagListItem>) getIntent().getSerializableExtra(AppConstants.BUNDLE_KEYS.KEY_SERIALIZABLE_OBJECT);
-        position = getIntent().getIntExtra(AppConstants.BUNDLE_KEYS.KEY_POSITION, 0);
-//        initFragmentsList();
-        fragmentList.add(SetReadFragment.getInstance(null));
-        fragmentList.add(FragmentInstrumentRead.getInstance());
-        pagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), fragmentList, this);
+        addFragmentList();
+        CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), fragmentList, this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(this);
         setOnClickListener(R.id.iv_left, R.id.iv_right, R.id.fb_add);
-        viewPager.setCurrentItem(position);
+
     }
 
-//    private void initFragmentsList() {
-//        for (TagListItem item : tagListItems) {
-//            fragmentList.add(SetReadFragment.getInstance(item));
-//        }
-//    }
+    private void addFragmentList() {
+
+        if (setsList != null && instrumentList == null) {
+            fragmentSize(setsList.size());
+        } else if (setsList == null && instrumentList != null) {
+            fragmentSize(instrumentList.size());
+        } else if (setsList != null && instrumentList != null) {
+            fragmentSize(setsList.size() + instrumentList.size());
+        }
+
+    }
+
+    private void fragmentSize(int size) {
+        for (int i = 0; i < size; i++) {
+            fragmentList.add("");
+        }
+    }
+
+    @Override
+    protected void loadBundle(Bundle bundle) {
+        setsList = (ArrayList<IdentifyTagsSets>) bundle.getSerializable(AppConstants.BUNDLE_KEYS.SETS);
+        instrumentList = (ArrayList<IdentifyTagsInstrument>) bundle.getSerializable(AppConstants.BUNDLE_KEYS.INSTRUMENT);
+        tagList = (ArrayList<String>) bundle.getSerializable(AppConstants.BUNDLE_KEYS.TAGLIST);
+    }
+
 
     private void findViews() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         ivLeft = (ImageView) findViewById(R.id.iv_left);
         ivRight = (ImageView) findViewById(R.id.iv_right);
-        fab = (FloatingActionButton) findViewById(R.id.fb_add);
     }
+
 
     @Override
     public Fragment getFragmentItem(int position, Object listItem) {
-        Fragment fragment = fragmentList.get(position);
-        return fragment;
+
+        int j = 0;
+        Fragment fragment[] = new Fragment[fragmentList.size()];
+        for (int i = 0; i < fragmentList.size(); i++) {
+
+            if (setsList != null && instrumentList != null) {
+                if (i < setsList.size()) {
+                    IdentifyTagsSets tagsSets = setsList.get(i);
+                    fragment[i] = SetReadFragment.getInstance(tagsSets, tagList, i);
+                } else {
+                    IdentifyTagsInstrument identifyTagsInstrument = instrumentList.get(j);
+                    fragment[i] = InstrumensReadFragment.getInstance(identifyTagsInstrument);
+                    j++;
+                }
+            } else if (setsList != null && instrumentList == null) {
+                IdentifyTagsSets tagsSets = setsList.get(i);
+                fragment[i] = SetReadFragment.getInstance(tagsSets, tagList, i);
+            }
+            else if (setsList==null && instrumentList!=null){
+                IdentifyTagsInstrument identifyTagsInstrument = instrumentList.get(i);
+                fragment[i] = InstrumensReadFragment.getInstance(identifyTagsInstrument);
+            }
+
+        }
+        return fragment[position];
+
     }
+
 
     @Override
     public void onClick(View v) {

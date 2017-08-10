@@ -1,0 +1,154 @@
+{
+  "status": 200,
+  "response_time": 0.014877080917358,
+  "data": {
+    "instruments": [
+      {
+        "id": "INST35201700011",
+        "name": "Instrument master test",
+        "tagged": "YES",
+        "vendor_uid": "",
+        "rfid_code": "3000E2004102631501242090399190",
+        "found_rfid_id": false,
+        "type": "Instrument",
+        "set_id": "SET35201700004",
+        "asset_type": "ID",
+        "reader": true,
+        "ins_master_code": "INMA35201700009",
+        "image": "http://pivotassets.ga/images/uploads/default-user.png"
+      },
+      {
+        "id": "INST35201700012",
+        "name": "Instrument master test",
+        "tagged": "YES",
+        "vendor_uid": "",
+        "rfid_code": "3000A00000000000000000000112",
+        "found_rfid_id": true,
+        "type": "Instrument",
+        "set_id": "SET35201700004",
+        "asset_type": "ID",
+        "reader": true,
+        "ins_master_code": "INMA35201700009",
+        "image": "http://pivotassets.ga/images/uploads/default-user.png"
+      },
+      {
+        "id": "INST35201700010",
+        "name": "Tray Instrument 1",
+        "tagged": "YES",
+        "vendor_uid": "",
+        "rfid_code": "3000E200680A0000000000000000",
+        "found_rfid_id": true,
+        "type": "Tray",
+        "set_id": "SET35201700004",
+        "asset_type": "ID",
+        "reader": true,
+        "ins_master_code": "INMA35201700008",
+        "image": "http://pivotassets.ga/images/uploads/default-user.png"
+      }
+    ],
+    "sets": [
+      {
+        "id": "SET35201700004",
+        "name": "Set 0",
+        "location": 0,
+        "tag": "3000E200680A0000000000000000",
+        "reader": true,
+        "instruments": [
+          {
+            "id": "INST35201700011",
+            "name": "Instrument master test",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000E2004102631501242090399190",
+            "found_rfid_id": false,
+            "type": "Instrument",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700009",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          },
+          {
+            "id": "INST35201700012",
+            "name": "Instrument master test",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000A00000000000000000000112",
+            "found_rfid_id": true,
+            "type": "Instrument",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700009",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          },
+          {
+            "id": "INST35201700010",
+            "name": "Tray Instrument 1",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000E200680A0000000000000000",
+            "found_rfid_id": true,
+            "type": "Tray",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700008",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          }
+        ]
+      },
+      {
+        "id": "SET352017",
+        "name": "Set 1",
+        "location": 0,
+        "tag": "3000E200680A0000000000000000",
+        "reader": true,
+        "instruments": [
+          {
+            "id": "INST35201700011",
+            "name": "Instrument master test",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000E2004102631501242090399190",
+            "found_rfid_id": false,
+            "type": "Instrument",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700009",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          },
+          {
+            "id": "INST35201700012",
+            "name": "Instrument master test",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000A00000000000000000000112",
+            "found_rfid_id": true,
+            "type": "Instrument",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700009",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          },
+          {
+            "id": "INST35201700010",
+            "name": "Tray Instrument 1",
+            "tagged": "YES",
+            "vendor_uid": "",
+            "rfid_code": "3000E200680A0000000000000000",
+            "found_rfid_id": true,
+            "type": "Tray",
+            "set_id": "SET35201700004",
+            "asset_type": "ID",
+            "reader": true,
+            "ins_master_code": "INMA35201700008",
+            "image": "http://pivotassets.ga/images/uploads/default-user.png"
+          }
+        ]
+      }
+    ]
+  }
+}

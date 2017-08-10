@@ -1,10 +1,12 @@
 package com.pivot.pivot.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -17,16 +19,27 @@ import com.atid.lib.rfid.exception.ATRfidReaderException;
 import com.atid.lib.rfid.type.ActionState;
 import com.atid.lib.rfid.type.MemoryBank;
 import com.atid.lib.rfid.type.ResultCode;
+import com.pivot.pivot.ApiGenerator;
 import com.pivot.pivot.R;
 import com.pivot.pivot.activity.base.BaseInventoryActivity;
 import com.pivot.pivot.adapters.TagListAdapter;
-import com.pivot.pivot.model.TagListItem;
+import com.pivot.pivot.model.IdentifyTagsInstrument;
+import com.pivot.pivot.model.IdentifyTagsResponse;
+import com.pivot.pivot.model.IdentifyTagsSets;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
+import simplifii.framework.ListAdapters.CustomListAdapter;
+import simplifii.framework.ListAdapters.CustomListAdapterInterface;
+import simplifii.framework.asyncmanager.HttpParamObject;
 import simplifii.framework.utility.AppConstants;
+import simplifii.framework.utility.CollectionUtils;
 
-public class InventoryActivity extends BaseInventoryActivity implements OnCheckedChangeListener, AdapterView.OnItemClickListener {
+public class InventoryActivity extends BaseInventoryActivity {
 
     private static final String TAG = InventoryActivity.class.getSimpleName();
 
@@ -48,6 +61,10 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
     private ListView listView;
     private boolean isStopped;
     private TextView emptyView, scanCount;
+    private ArrayList<String> tagList = new ArrayList<>();
+    private ArrayList<IdentifyTagsSets> setsList = new ArrayList<>();
+    private ArrayList<IdentifyTagsInstrument> instrumentList = new ArrayList<>();
+    private CustomListAdapter listAdapter;
 
 
     @Override
@@ -85,6 +102,9 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         mSpeedTagCount = 0;
         startInventory();
         setActionText(false);
+
+
+        setOnClickListener(R.id.tv_start_stop_read);
     }
 
     @Override
@@ -152,6 +172,7 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
 //		}
         switch (v.getId()) {
             case R.id.tv_start_stop_read:
+                // identifyTags();
                 if (isStopped) {
                     stopInventory();
                 } else {
@@ -162,11 +183,55 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         super.onClick(v);
     }
 
+    private void identifyTags() {
+
+        if (CollectionUtils.isNotEmpty(tagList)) {
+            String tagList = TextUtils.join(",", this.tagList);
+            HttpParamObject httpParamObject = ApiGenerator.identifyTag(tagList);
+            executeTask(AppConstants.TASK_CODES.IDENTIFY_TAGS, httpParamObject);
+        }
+    }
+
+
+    @Override
+    public void onPostExecute(Object response, int taskCode, Object... params) {
+        super.onPostExecute(response, taskCode, params);
+        switch (taskCode) {
+            case AppConstants.TASK_CODES.IDENTIFY_TAGS:
+                Bundle bundle = new Bundle();
+                IdentifyTagsResponse identifyTagsResponse = (IdentifyTagsResponse) response;
+                if (identifyTagsResponse != null) {
+                    ArrayList<IdentifyTagsInstrument> instruments = (ArrayList<IdentifyTagsInstrument>) identifyTagsResponse.getInstruments();
+                    ArrayList<IdentifyTagsSets> sets = (ArrayList<IdentifyTagsSets>) identifyTagsResponse.getSets();
+
+                    if (CollectionUtils.isNotEmpty(sets)) {
+                        bundle.putSerializable(AppConstants.BUNDLE_KEYS.SETS, sets);
+                        setsList.addAll(sets);
+                    }
+                    if (CollectionUtils.isNotEmpty(instruments)) {
+                        bundle.putSerializable(AppConstants.BUNDLE_KEYS.INSTRUMENT, instruments);
+                        instrumentList.addAll(instruments);
+
+                    }
+                    if (tagList != null) {
+                        bundle.putSerializable(AppConstants.BUNDLE_KEYS.TAGLIST, tagList);
+                    }
+                    startNextActivity(bundle, ReadActivity.class);
+                    finish();
+
+                }
+                break;
+        }
+    }
+
     @Override
     public void onReadedTag(ATRfidReader reader, ActionState action, String tag, float rssi, float phase) {
         long time = System.currentTimeMillis();
         double interval = 0.0;
 
+        if (!tagList.contains(tag)) {
+            tagList.add(tag);
+        }
         ATLog.i(TAG, "EVENT. onReadedTag(%s, [%s], %.2f, %.2f)", action, tag, rssi, phase);
 
         Log.d(TAG, "Tag Readed:" + tag);
@@ -181,17 +246,19 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         }
         ATLog.d(TAG, "@@@ DEBUG. Tag Speed [%.2f, %d, %.3f, %d, %d]", mTagSpeed, mTotalTagCount, interval, time,
                 mLastTime);
-        tagListAdapter.addTag(tag, rssi, phase);
-        tagListAdapter.notifyDataSetChanged();
-        setEmptyView();
+
+        //tagListAdapter.addTag(tag, rssi, phase);
+        //tagListAdapter.notifyDataSetChanged();
+//        listAdapter.notifyDataSetChanged();
+//        setEmptyView();
         super.onReadedTag(reader, action, tag, rssi, phase);
     }
 
     private void setEmptyView() {
-        if (tagListAdapter.getCount() > 0) {
+        if (listAdapter.getCount() > 0) {
             emptyView.setVisibility(View.GONE);
             scanCount.setVisibility(View.VISIBLE);
-            scanCount.setText("Total tags scanned : " + tagListAdapter.getCount());
+            scanCount.setText("Total tags scanned : " + listAdapter.getCount());
         } else {
             scanCount.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -219,9 +286,9 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         }
         ATLog.d(TAG, "@@@ DEBUG. Tag Speed [%.2f, %d, %.3f, %d, %d]", mTagSpeed, mTotalTagCount, interval, time,
                 mLastTime);
-        tagListAdapter.addTag(epc, data, rssi, phase);
-        tagListAdapter.notifyDataSetChanged();
-        setEmptyView();
+        //tagListAdapter.addTag(epc, data, rssi, phase);
+        //tagListAdapter.notifyDataSetChanged();
+        //setEmptyView();
         super.onAccessResult(reader, code, action, epc, data, rssi, phase);
 //
 //		txtTotalCount.setText("" + mTotalTagCount);
@@ -233,6 +300,7 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         super.onActionChanged(reader, action);
         if (action == ActionState.Stop) {
             setActionText(true);
+            identifyTags();
         } else {
             setActionText(false);
         }
@@ -314,9 +382,10 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         super.initWidgets();
         initToolBar(getString(R.string.scanned_tags_list));
         listView = (ListView) findViewById(R.id.listView);
-        tagListAdapter = new TagListAdapter(this);
-        listView.setAdapter(tagListAdapter);
-        listView.setOnItemClickListener(this);
+//        listAdapter = new CustomListAdapter(this, R.layout.item_tag_list, setsList, this);
+//        listView.setAdapter(listAdapter);
+//        tagListAdapter = new TagListAdapter(this);
+
         emptyView = (TextView) findViewById(android.R.id.empty);
         listView.setEmptyView(emptyView);
         scanCount = (TextView) findViewById(R.id.tv_scan_count);
@@ -452,14 +521,62 @@ public class InventoryActivity extends BaseInventoryActivity implements OnChecke
         }
     };
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ArrayList<TagListItem> list = tagListAdapter.getTagsList();
-        if (list != null && list.size() > 0) {
-            Bundle b = new Bundle();
-            b.putSerializable(AppConstants.BUNDLE_KEYS.KEY_SERIALIZABLE_OBJECT, list);
-            b.putInt(AppConstants.BUNDLE_KEYS.KEY_POSITION, i);
-            startNextActivity(b, ReadActivity.class);
-        }
-    }
+//    @Override
+//    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//        ArrayList<TagListItem> list = tagListAdapter.getTagsList();
+//        if (list != null && list.size() > 0) {
+//            Bundle b = new Bundle();
+//            b.putSerializable(AppConstants.BUNDLE_KEYS.KEY_SERIALIZABLE_OBJECT, list);
+//            b.putInt(AppConstants.BUNDLE_KEYS.KEY_POSITION, i);
+//            startNextActivity(b, ReadActivity.class);
+//        }
+//    }
+
+//    @Override
+//    public View getView(final int position, View convertView, ViewGroup parent, int resourceID, LayoutInflater inflater) {
+//        Holder holder = null;
+//        if (convertView == null) {
+//            convertView = inflater.inflate(R.layout.item_tag_list, parent, false);
+//            holder = new Holder(convertView);
+//            convertView.setTag(holder);
+//        } else {
+//            holder = (Holder) convertView.getTag();
+//        }
+//        IdentifyTagsSets tagsSets = setsList.get(position);
+//        if (tagsSets != null) {
+//            String name = tagsSets.getName();
+//            if (!TextUtils.isEmpty(name)) {
+//                holder.tvItem.setText(name);
+//            }
+//        }
+//        convertView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onItemClick(null, view, position, 0);
+//            }
+//        });
+//        return convertView;
+//
+//    }
+//
+//    @Override
+//    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//        String name = setsList.get(position).getName();
+//
+//        switch (name) {
+//            case "Set 0":
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(AppConstants.BUNDLE_KEYS.SETSLIST, setsList);
+//                startNextActivity(bundle, SetTagInstrumentActivity.class);
+//                break;
+//        }
+//    }
+//
+//    class Holder {
+//        TextView tvItem;
+//
+//        public Holder(View view) {
+//            tvItem = (TextView) view.findViewById(R.id.tag_value);
+//        }
+//    }
 }

@@ -38,7 +38,7 @@ public class MultipartUtility {
         this.charset = charset;
 
         // creates a unique boundary based on time stamp
-        boundary = "---011000010111000001101001";
+        boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
         URL url = new URL(requestURL);
         httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setConnectTimeout(300000);

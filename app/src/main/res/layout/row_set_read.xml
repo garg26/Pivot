@@ -50,22 +50,22 @@
             android:id="@+id/iv_right_angle"
             android:layout_width="@dimen/img_16dp"
             android:layout_height="@dimen/img_16dp"
-            android:layout_marginRight="@dimen/margib_10dp"
-            android:layout_toLeftOf="@+id/tv_exclamation"
+            android:layout_marginRight="@dimen/margin_16dp"
+            android:layout_toLeftOf="@+id/iv_exclamation"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:src="@mipmap/right_black"
+
             />
 
-        <simplifii.framework.widgets.CustomFontTextView
-            android:id="@+id/tv_exclamation"
+        <ImageView
+            android:id="@+id/iv_exclamation"
             android:layout_width="@dimen/img_20dp"
             android:layout_height="@dimen/img_20dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:background="@drawable/shape_circle"
-            android:text="!"/>
+            android:background="@mipmap/warning"
+            />
 
     </RelativeLayout>
 

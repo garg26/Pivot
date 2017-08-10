@@ -119,7 +119,7 @@ public class BluetoothManager {
         Log.i("Log", "Discoverable ");
     }
 
-    public static void askPermissions(Activity context, PermissionListener listener) {
+    public static void askPermissions(Context context, PermissionListener listener) {
         new TedPermission(context).setPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION).setPermissionListener(listener).check();
     }
 

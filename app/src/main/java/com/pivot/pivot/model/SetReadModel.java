@@ -5,7 +5,16 @@ package com.pivot.pivot.model;
  */
 
 public class SetReadModel {
-    String titleName, subTitle;
+    String titleName, subTitle,rfidReaderID;
+
+    public String getRfidReaderID() {
+        return rfidReaderID;
+    }
+
+    public void setRfidReaderID(String rfidReaderID) {
+        this.rfidReaderID = rfidReaderID;
+    }
+
     int image;
 
     public String getTitleName() {

@@ -26,6 +26,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import simplifii.framework.activity.BaseActivity;
+import simplifii.framework.utility.AppConstants;
+import simplifii.framework.utility.Preferences;
 
 /**
  * Created by nbansal2211 on 12/06/17.
@@ -65,12 +67,14 @@ public class BaseReaderActivity extends BaseActivity implements ATRfidEventListe
     private boolean mKeyAction;
 
     protected void initATRfidReader() {
+
         ATRfidManager.setContext(this);
         if (!ATRfidManager.isBluetoothSupported()) {
             showToast(R.string.bluetooth_not_supported);
         }
 
         ATRfidManager.checkEnableBluetooth(this);
+
 
         mReader = ATRfidManager.getInstance();
         mReader.setAddress(mDeviceAddress);

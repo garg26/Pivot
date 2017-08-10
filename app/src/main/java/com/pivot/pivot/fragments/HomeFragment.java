@@ -2,23 +2,16 @@ package com.pivot.pivot.fragments;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.pivot.pivot.R;
-import com.pivot.pivot.activity.HomeActivity;
-import com.pivot.pivot.activity.ReadActivity;
 import com.pivot.pivot.activity.ReadersListActivity;
 import com.pivot.pivot.bluetooth.BluetoothManager;
 import com.pivot.pivot.bluetooth.BluetoothReceiver;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import simplifii.framework.fragments.BaseFragment;
 import simplifii.framework.utility.AppConstants;

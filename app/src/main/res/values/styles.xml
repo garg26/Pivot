@@ -1,0 +1,53 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="et_login" parent="match_wrap">
+        <item name="android:textSize">@dimen/text_14dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:background">@drawable/shape_bg_dialog</item>
+        <item name="android:padding">@dimen/padding_14dp</item>
+    </style>
+
+    <style name="btn_style_login" parent="match_wrap">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/btn_login</item>
+    </style>
+
+    <style name="btn_style_bluetooth" parent="match_wrap">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_weight">5</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:padding">@dimen/padding_12dp</item>
+        <item name="android:background">@drawable/btn_login</item>
+    </style>
+
+    <style name="style_main_layout" parent="match_match">
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/padding_24dp</item>
+    </style>
+
+    <style name="iv_direction_style">
+        <item name="android:layout_height">@dimen/img_32dp</item>
+        <item name="android:layout_width">@dimen/img_32dp</item>
+        <item name="android:padding">@dimen/padding_4dp</item>
+    </style>
+
+    <style name="tv_style" parent="match_wrap">
+        <item name="android:textSize">@dimen/text_20dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="tv_row_title_style" parent="wrap_wrap">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:textSize">@dimen/text_14dp</item>
+
+    </style>
+
+</resources>

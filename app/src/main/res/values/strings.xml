@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Pivot</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email Address</string>
+    <string name="log_in">Log In</string>
+    <string name="navigation_drawer_open">navigation_drawer_open</string>
+    <string name="navigation_drawer_close">navigation_drawer_close</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="empty_email">Please enter Email Address</string>
+    <string name="invalid_email">Please enter valid Email Address</string>
+    <string name="empty_pasword">Please enter password</string>
+    <string name="short_password">Password must be greater than 4 characters</string>
+    <string name="bluetooth_not_supported">Bluetooth not supported</string>
+    <string name="start_reading">Start Reading</string>
+    <string name="stop_reading">Stop Reading</string>
+    <string name="connecting">Connecting</string>
+    <string name="not_able_to_connect">Not able to connect to device</string>
+    <string name="start_scan">Start scanning</string>
+    <string name="stop_scanning">Stop scanning</string>
+    <string name="connected">Connected</string>
+    <string name="scanned_tags_list">Tags List</string>
+    <string name="stop_scanning_tags">Please stop the scan to proceed</string>
+    <string name="start_scanning_via_reader">Start scanning via reader</string>
+    <string name="no_tags_scanned">No tags scanned.</string>
+
+    <array name="drawer_list_item">
+        <item>HOME</item>
+        <item>BLUETOOTH</item>
+        <item>SETTINGS</item>
+    </array>
+
+</resources>

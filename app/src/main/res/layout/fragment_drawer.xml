@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_140dp">
+
+        <ImageView
+            android:id="@+id/iv_logo_drawer"
+            android:layout_width="@dimen/width_logo_160dp"
+            android:layout_height="@dimen/drawer_logo_height_80dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/pivot_logo" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:scrollbars="none"
+        android:divider="@color/full_transparent"
+        android:id="@+id/listview_drawer"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

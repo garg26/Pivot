@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.pivot.pivot.activity.LoginActivity">
+
+    <!--<android.support.v7.widget.Toolbar style="@style/toolbar"/>-->
+
+    <LinearLayout
+        style="@style/style_main_layout"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="@dimen/logo_img_width"
+            android:layout_height="@dimen/logo_image_height"
+            android:src="@mipmap/pivot_logo"
+            android:layout_marginBottom="@dimen/margin_40dp"/>
+
+        <simplifii.framework.widgets.CustomFontEditText
+            style="@style/et_login"
+            android:id="@+id/et_email"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_address"/>
+
+        <simplifii.framework.widgets.CustomFontEditText
+            style="@style/et_login"
+            android:inputType="textPassword"
+            android:id="@+id/et_pass"
+            android:hint="@string/password"/>
+
+        <simplifii.framework.widgets.CustomFontButton
+            android:id="@+id/btn_login"
+            style="@style/btn_style_login"
+            android:layout_marginTop="@dimen/margin_32dp"
+            android:text="@string/log_in"/>
+
+    </LinearLayout>
+
+</LinearLayout>

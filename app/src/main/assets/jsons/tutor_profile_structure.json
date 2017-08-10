@@ -1,0 +1,37 @@
+[
+  {
+    "title" : "Personal Details",
+    "content" : "Update basic personal details to increase profile score by 20%.",
+    "profileStructureType":1
+  },
+  {
+    "title" : "Location",
+    "content" : "Enter your tution locations to increase profile score by 10%",
+    "profileStructureType":2
+  },
+  {
+    "title" : "Tuition Details",
+    "content" : "Enter Details about courses and classes you teach and increase your profile score by 25%",
+    "profileStructureType":3
+  },
+  {
+    "title" : "Qualifications",
+    "content" : "Enter all your education details and increase your profile score by 10%",
+    "profileStructureType":4
+  },
+  {
+    "title" : "Social Profiles",
+    "content" : "Provide details of your social profiles to increase your profile score by 5%",
+    "profileStructureType":5
+  },
+  {
+    "title" : "Content",
+    "content" : "Upload your promotional content to increase your profile score by 25%",
+    "profileStructureType":6
+  },
+  {
+    "title" : "Reviews",
+    "content" : "Invite your contacts to review and like your profile to increase your profile by 10%",
+    "profileStructureType":7
+  }
+]

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/padding_16dp"
+    android:paddingRight="@dimen/padding_16dp">
+
+    <ImageView
+        android:id="@+id/iv_title_image1"
+        android:layout_width="@dimen/img_24dp"
+        android:layout_height="@dimen/img_24dp"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:layout_marginLeft="@dimen/margin_12dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/tools"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl_row_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16dp"
+        android:layout_marginBottom="@dimen/margin_16dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_title_image1">
+
+        <simplifii.framework.widgets.CustomFontTextView
+            android:id="@+id/tv_title"
+            style="@style/tv_row_title_style"
+            android:padding="0dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="@dimen/margin_16dp"
+            android:layout_toRightOf="@+id/iv_right_angle"
+            android:layout_alignParentLeft="true"
+            android:text="dummy"/>
+
+        <simplifii.framework.widgets.CustomFontTextView
+            android:id="@+id/tv_sub_title"
+            style="@style/tv_row_title_style"
+            android:layout_marginTop="@dimen/margin_4dp"
+            android:layout_below="@+id/tv_title"
+            android:padding="0dp"
+            android:layout_marginLeft="@dimen/margin_16dp"
+            android:layout_toRightOf="@+id/iv_right_angle"
+            android:layout_alignParentLeft="true"
+            android:text="dummy"/>
+
+        <ImageView
+            android:id="@+id/iv_right_angle"
+            android:layout_width="@dimen/img_16dp"
+            android:layout_height="@dimen/img_16dp"
+            android:layout_marginRight="@dimen/margib_10dp"
+            android:layout_toLeftOf="@+id/tv_exclamation"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:src="@mipmap/right_black"
+            />
+
+        <simplifii.framework.widgets.CustomFontTextView
+            android:id="@+id/tv_exclamation"
+            android:layout_width="@dimen/img_20dp"
+            android:layout_height="@dimen/img_20dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:background="@drawable/shape_circle"
+            android:text="!"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_row_view"
+        android:layout_below="@+id/rl_row_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_title_image1"
+        android:layout_marginLeft="@dimen/margin_16dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/view_line_description"
+            android:layout_height="0.5dp"
+            android:background="@color/et_gray"></View>
+    </RelativeLayout>
+
+</RelativeLayout>

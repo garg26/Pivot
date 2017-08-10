@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <simplifii.framework.widgets.CustomFontTextView
+        android:id="@+id/tv_title_main"
+        style="@style/match_wrap"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="#EEEEEE"
+        android:textSize="16dp"
+        android:textColor="@color/black"
+        android:visibility="visible"
+        android:text="Reader 1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:layout_below="@+id/tv_title_main">
+
+        <simplifii.framework.widgets.CustomFontTextView
+            android:id="@+id/tv_name"
+            android:layout_centerVertical="true"
+            style="@style/tv_row_title_style"
+            android:paddingLeft="16dp"
+            android:text="Bluetooth Name 1"/>
+
+        <simplifii.framework.widgets.CustomFontRadio
+            android:id="@+id/radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_16dp"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PAIR"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:id="@+id/btn_pair"
+            android:visibility="visible"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/margin_16dp"
+        android:layout_marginRight="@dimen/margin_16dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_gray"/>
+
+</RelativeLayout>

@@ -11,8 +11,12 @@ public class CollectionUtils {
     public static boolean isEmpty(Collection collection){
         return (collection==null||collection.isEmpty());
     }
+    public static boolean isEmpty(String string){
+        return (string==null||string.isEmpty());
+    }
 
     public static boolean isNotEmpty(Collection collection){
         return !isEmpty(collection);
     }
+
 }

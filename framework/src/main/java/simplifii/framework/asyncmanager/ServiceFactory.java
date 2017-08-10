@@ -13,6 +13,9 @@ public class ServiceFactory {
             case AppConstants.TASK_CODES.UPLOAD_FILE:
                 service = new FileUploadService();
                 break;
+            case AppConstants.TASK_CODES.READ_INSTRUMENT:
+                service = new MockService();
+                break;
             default:
                 service = new OKHttpService();
                 break;

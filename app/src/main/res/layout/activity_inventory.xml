@@ -36,14 +36,13 @@
         android:text="@string/no_tags_scanned"
         android:textSize="@dimen/text_20dp" />
 
-    <simplifii.framework.widgets.CustomFontTextView
+    <simplifii.framework.widgets.CustomFontButton
         android:id="@+id/tv_start_stop_read"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/color_primary"
         android:gravity="center"
-        android:padding="16dp"
         android:text="@string/start_scanning_via_reader"
         android:textColor="@color/white"
         android:textSize="16dp" />

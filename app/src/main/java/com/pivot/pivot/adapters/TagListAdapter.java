@@ -2,6 +2,7 @@ package com.pivot.pivot.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pivot.pivot.R;
+import com.pivot.pivot.model.IdentifyTagsSets;
 import com.pivot.pivot.model.TagListItem;
 
 public class TagListAdapter extends BaseAdapter {
@@ -24,7 +26,7 @@ public class TagListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
 
 
-    private ArrayList<TagListItem> mList;
+    private ArrayList<IdentifyTagsSets> mList;
     private HashMap<String, TagListItem> mMap;
     private boolean mIsDisplayPc;
     private boolean mIsReportRSSI;
@@ -43,7 +45,7 @@ public class TagListAdapter extends BaseAdapter {
         mContext = context;
         mInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mList = new ArrayList<TagListItem>();
+        mList = new ArrayList<IdentifyTagsSets>();
         mMap = new HashMap<String, TagListItem>();
         mIsDisplayPc = true;
         mIsShowCount = true;
@@ -59,7 +61,7 @@ public class TagListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public ArrayList<TagListItem> getTagsList() {
+    public ArrayList<IdentifyTagsSets> getTagsList() {
         return mList;
     }
 
@@ -119,36 +121,44 @@ public class TagListAdapter extends BaseAdapter {
         }
     }
 
-    public void addTag(String tag, float rssi, float phase) {
-        TagListItem item = null;
+//    public void addTag(String tag, float rssi, float phase) {
+//        TagListItem item = null;
+//
+//        if (null == (item = mMap.get(tag))) {
+//            item = new TagListItem(tag, rssi, phase);
+//            mList.add(item);
+//            mMap.put(tag, item);
+//        } else {
+//            item.updateItem(rssi, phase);
+//        }
+//    }
 
-        if (null == (item = mMap.get(tag))) {
-            item = new TagListItem(tag, rssi, phase);
-            mList.add(item);
-            mMap.put(tag, item);
-        } else {
-            item.updateItem(rssi, phase);
-        }
-    }
-
-
-    public void addTag(String tag, String tid, float rssi, float phase) {
-        TagListItem item = null;
-
-        if (null == (item = mMap.get(tag))) {
-            item = new TagListItem(tag, tid, rssi, phase);
-            mList.add(item);
-            mMap.put(tag, item);
-        } else {
-            if (item.getTid().equals(tid))
-                item.updateItem(rssi, phase);
-            else {
-                item = new TagListItem(tag, tid, rssi, phase);
-                mList.add(item);
-                mMap.put(tag, item);
+    public void setmList(List<IdentifyTagsSets> sets){
+        if (sets!=null){
+            for (IdentifyTagsSets tagsSets: sets){
+                mList.add(tagsSets);
             }
         }
     }
+
+
+//    public void addTag(String tag, String tid, float rssi, float phase) {
+//        TagListItem item = null;
+//
+//        if (null == (item = mMap.get(tag))) {
+//            item = new TagListItem(tag, tid, rssi, phase);
+//            mList.add(item);
+//            mMap.put(tag, item);
+//        } else {
+//            if (item.getTid().equals(tid))
+//                item.updateItem(rssi, phase);
+//            else {
+//                item = new TagListItem(tag, tid, rssi, phase);
+//                mList.add(item);
+//                mMap.put(tag, item);
+//            }
+//        }
+//    }
 
     @Override
     public int getCount() {
@@ -157,11 +167,11 @@ public class TagListAdapter extends BaseAdapter {
 
     @Override
     public String getItem(int position) {
-        return mList.get(position).getTag(true);
+        return mList.get(position).getName();
     }
 
     public String getItem(int position, boolean displayPc) {
-        return mList.get(position).getTag(displayPc);
+        return mList.get(position).getName();
     }
 
     @Override
@@ -180,7 +190,7 @@ public class TagListAdapter extends BaseAdapter {
         } else {
             holder = (TagListViewHolder) convertView.getTag();
         }
-        holder.setItem(mList.get(position), mIsDisplayPc);
+        holder.setItem(mList.get(position).getName(), mIsDisplayPc);
         return convertView;
     }
 
@@ -213,13 +223,14 @@ public class TagListAdapter extends BaseAdapter {
             parent.setTag(this);
         }
 
-        public void setItem(TagListItem item, boolean displayPc) {
-            txtTag.setText(item.getTag(displayPc));
-            txtTid.setText(item.getTid());
-            txtRssi.setText(String.format(Locale.US, "%.1f dB", item.getRSSI()));
-            txtPhase.setText(String.format(Locale.US, "%.1f˚", item.getPhase()));
-            txtCount.setText("" + item.getCount());
-            layoutSubItems.setVisibility(mIsReportRSSI ? View.VISIBLE : View.GONE);
+        public void setItem(String item, boolean displayPc) {
+            txtTag.setText(item);
+        //    txtTag.setText(item.getTag(displayPc));
+//            txtTid.setText(item.getTid());
+//            txtRssi.setText(String.format(Locale.US, "%.1f dB", item.getRSSI()));
+//            txtPhase.setText(String.format(Locale.US, "%.1f˚", item.getPhase()));
+//            txtCount.setText("" + item.getCount());
+//            layoutSubItems.setVisibility(mIsReportRSSI ? View.VISIBLE : View.GONE);
         }
     }
 

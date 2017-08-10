@@ -23,12 +23,18 @@ public class ReadersListActivity extends BaseReaderActivity {
         super.onCreate(savedInstanceState);
         initATRfidReader();
 //        ATRfidManager.openDeviceListActivity(this);
+
         connectDevice();
     }
 
     public void connectDevice() {
-        mReader.connectDevice(getIntent().getStringExtra("device_device"));
-//        ATRfidManager.onActivityResult(2, -1, getIntent().getStringExtra("device_device"));
+        if (mReader.getState().equals(ConnectionState.Connected)) {
+            showToast("Already Connected");
+            startNextActivity(null, InventoryActivity.class);
+            finish();
+        } else {
+            mReader.connectDevice(getIntent().getStringExtra("device_device"));
+        }
     }
 
     @Override
@@ -44,7 +50,6 @@ public class ReadersListActivity extends BaseReaderActivity {
     public void onStateChanged(ATRfidReader atRfidReader, ConnectionState connectionState) {
         super.onStateChanged(atRfidReader, connectionState);
         if (ConnectionState.Connected == connectionState) {
-            hideProgressBar();
             showToast(R.string.connected);
             startNextActivity(null, InventoryActivity.class);
             finish();
@@ -53,6 +58,8 @@ public class ReadersListActivity extends BaseReaderActivity {
             showToast(R.string.not_able_to_connect);
             finish();
         }
+
+
     }
 
     @Override

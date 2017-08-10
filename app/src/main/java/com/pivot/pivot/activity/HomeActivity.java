@@ -1,14 +1,13 @@
 package com.pivot.pivot.activity;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -20,9 +19,12 @@ import com.pivot.pivot.fragments.DrawerFragment;
 import com.pivot.pivot.fragments.HomeFragment;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import simplifii.framework.activity.BaseActivity;
 import simplifii.framework.utility.AppConstants;
+import simplifii.framework.utility.CollectionUtils;
+import simplifii.framework.utility.Preferences;
 
 public class HomeActivity extends BaseActivity implements DrawerLayout.DrawerListener, DrawerFragment.ToolbarTitleListner {
 
@@ -40,13 +42,15 @@ public class HomeActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         initToolBar("Pivot");
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            BluetoothDevice bluetoothDevice = bundle.getParcelable(AppConstants.BUNDLE_KEYS.BLUETOOTH_LIST);
-            if (bluetoothDevice != null){
-                openBluetoothFrag = true;
-            }
-        }
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null){
+//            BluetoothDevice bluetoothDevice = bundle.getParcelable(AppConstants.BUNDLE_KEYS.BLUETOOTH_LIST);
+//            if (bluetoothDevice != null){
+//                openBluetoothFrag = true;
+//            }
+//        }
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_home);
         drawerLayout.addDrawerListener(this);
@@ -54,8 +58,38 @@ public class HomeActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         HomeFragment homeFragment = HomeFragment.getInstance();
         BluetoothConnectionFragment connectionFragment = BluetoothConnectionFragment.getInstance();
+
+        Boolean isLogin = Preferences.getData(Preferences.LOGIN_KEY, false);
+        String myDeviceAddress = Preferences.getData(AppConstants.PREF_KEYS.BLUETOOTH_DEVICE, null);
+
+        if (!isLogin) {
+            startNextActivity(LoginActivity.class);
+            finish();
+            return;
+        } else {
+            if (CollectionUtils.isEmpty(myDeviceAddress)){
+                addFragment(connectionFragment,false);
+            }
+            else if(pairedDevices!=null){
+                boolean containAddress = false;
+                for(BluetoothDevice deviceAddress:pairedDevices){
+                    if(deviceAddress.getAddress().equals(myDeviceAddress)){
+                        containAddress=true;
+                        addFragment(homeFragment,false);
+                        break;
+                    }
+
+                }
+                if (!containAddress){
+                    addFragment(connectionFragment,false);
+                }
+
+
+            }
+        }
+
         addDrawerFragment(connectionFragment);
-        addFragment(connectionFragment, false);
+
     }
 
     public void addFragment(Fragment fragment, boolean b) {

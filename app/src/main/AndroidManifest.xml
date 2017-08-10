@@ -4,12 +4,16 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
     <application
         android:name=".AppController"
         android:allowBackup="true"
@@ -19,6 +23,9 @@
         android:theme="@style/Theme.DesignDemo">
         <activity
             android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.HomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,29 +34,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.HomeActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.ReadActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ReadingListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ReadersListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.InventoryActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.atid.lib.device.dialog.DeviceListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="DeviceListActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.SetTagInstrumentActivity"></activity>
     </application>
 
 </manifest>
